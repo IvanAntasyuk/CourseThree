@@ -1,6 +1,6 @@
-package Lesson2.serverSide.service;
+package Lesson3.serverSide.service;
 
-import Lesson2.serverSide.interfaces.AuthService;
+import Lesson3.serverSide.interfaces.AuthService;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -27,13 +27,13 @@ public class BaseAuthService implements AuthService {
                 String login = resultSet.getString(1);
                 String password = resultSet.getString(2);
                 String nick = resultSet.getString(3);
-                clientsHashMap.put(login, new Clients(login, password, nick));
+                clientsHashMap.put(login, new  Clients(login, password, nick));
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            stop();
+        // stop();
         }
     }
 
@@ -82,8 +82,12 @@ public class BaseAuthService implements AuthService {
             }
         }
         return null;
+        }
+      static public void changeNick(String nick,String newNick){
+          try {
+              statement.executeUpdate("UPDATE users SET nick=" + newNick + " WHERE nick = " + nick);
+          } catch (SQLException e) {
+              e.printStackTrace();
+          }
+      }
     }
-
-
-
-}

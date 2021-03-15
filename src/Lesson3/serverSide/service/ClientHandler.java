@@ -1,4 +1,4 @@
-package Lesson2.serverSide.service;
+package Lesson3.serverSide.service;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -94,13 +94,13 @@ public class ClientHandler {
 
                 myServer.broadcastMessage(name + ": " + messageFromClient);
             }
-          //  if (messageFromClient.startsWith("/change")) {
-          //          String[] messageChangeNick = messageFromClient.split(" ", 3);
-          //         BaseAuthService.changeNick(messageChangeNick[1], messageChangeNick[2]);
-          //          sendMessage("Ник изменен на "  + messageChangeNick[2]);
+            if (messageFromClient.startsWith("/change")) {
+                    String[] messageChangeNick = messageFromClient.split(" ", 3);
+                   BaseAuthService.changeNick(messageChangeNick[1], messageChangeNick[2]);
+                    sendMessage("Ник изменен на "  + messageChangeNick[2]);
                 }
             }
-
+    }
 
     public void sendMessage(String message) {
         try {
@@ -123,6 +123,7 @@ public class ClientHandler {
                         sendMessage("Client login :  " + nick);
                         name = nick;
                         myServer.broadcastMessage("Hello " + name);
+                        isLogin = true;
                         myServer.subscribe(this);
                         return;
                     } else {

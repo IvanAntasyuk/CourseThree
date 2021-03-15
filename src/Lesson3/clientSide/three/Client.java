@@ -1,17 +1,15 @@
-package Lesson2.clientSide.three;
+package Lesson3.clientSide.three;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 
 public class Client extends JFrame {
 
-    private final Integer SERVER_PORT = 8082;
+    private final Integer SERVER_PORT = 8089;
     private final String SERVER_ADDRESS = "localhost";
     private Socket socket;
     DataInputStream dis;
@@ -59,10 +57,14 @@ public class Client extends JFrame {
     public void send() {
         if (msgInputField.getText() != null && !msgInputField.getText().trim().isEmpty()) {
             try {
+                history();
                 dos.writeUTF(msgInputField.getText());
                 if (msgInputField.getText().equals("/end")) {
                     isAuthorized = false;
                     closeConnection();
+                }
+                if (msgInputField.getText().equals("/h")) {
+                    loadHistory();
                 }
                 msgInputField.setText("");
             } catch (IOException ignored) {
@@ -76,6 +78,34 @@ public class Client extends JFrame {
             dos.close();
             socket.close();
         } catch (IOException ignored) {
+        }
+    }
+
+    private void history() {
+        try (PrintWriter out = new PrintWriter(new FileWriter("history.txt", true))) {
+            if (!msgInputField.getText().startsWith("/")) {
+                out.append("Message from u3 :" + msgInputField.getText() + "\n");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadHistory() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("history.txt"))) {
+            StringBuffer sb = new StringBuffer();
+            int ch;
+            while ((ch = reader.read()) != -1) {
+                sb.append((char) ch);
+            }
+
+            dos.writeUTF(String.valueOf(sb));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -1,0 +1,16 @@
+Message from u2:Hello
+Message from u2:how are you?
+Message from u3 :helllo, i'm good  thanks
+Message from u3 :and you?
+Message from u2:fine
+Message from u1:hello friends
+Message from u1:go to the bar ?
+Message from u2:yes sure
+Message from u3 :yes
+Message from u1:ok
+Message from u1:meeting in bar 4 pm 
+Message from u2:ok
+Message from u3 :ok
+Message from u1:Bye!
+Message from u3 :good bye!!!
+Message from u2:i lost

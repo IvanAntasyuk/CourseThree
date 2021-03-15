@@ -1,6 +1,6 @@
-package Lesson2.serverSide.service;
+package Lesson3.serverSide.service;
 
-import Lesson2.serverSide.interfaces.AuthService;
+import Lesson3.serverSide.interfaces.AuthService;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyServer {
-    private final int PORT = 8082;
+    private final int PORT = 8089;
     private List<ClientHandler> clients;
     private AuthService authService;
 

@@ -11,7 +11,7 @@ import java.net.Socket;
 
 public class Client extends JFrame {
 
-    private final Integer SERVER_PORT = 8085;
+    private final Integer SERVER_PORT = 8082;
     private final String SERVER_ADDRESS = "localhost";
     private Socket socket;
     DataInputStream dis;
