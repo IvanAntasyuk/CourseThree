@@ -1,4 +1,4 @@
-package Lesson3.serverSide.interfaces;
+package Lesson4.serverSide.interfaces;
 
 import java.sql.SQLException;
 

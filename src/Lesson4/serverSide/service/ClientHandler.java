@@ -1,9 +1,12 @@
-package Lesson3.serverSide.service;
+package Lesson4.serverSide.service;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ClientHandler {
 
@@ -17,7 +20,7 @@ public class ClientHandler {
 
     private String name;
 
-    public ClientHandler(MyServer myServer, Socket socket) {
+    public ClientHandler(MyServer myServer, Socket socket) throws InterruptedException {
         try {
             this.myServer = myServer;
             this.socket = socket;
@@ -25,30 +28,12 @@ public class ClientHandler {
             this.dos = new DataOutputStream(socket.getOutputStream());
             this.name = "";
 
-            new Thread(() -> {
-                try {
-                    authentication();
-                    readMessage();
-                } catch (IOException ignored) {
-                } finally {
-                    closeConnection();
-                }
 
-            }).start();
-            new Thread(() -> {
-                try {
-                    Thread.sleep(120000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (!isLogin) {
-                    sendMessage("Time for authorization is over");
-                    closeConnection();
-                }
-            }
-
-            ).start();
+            ExecutorService executorService = Executors.newFixedThreadPool(3);
+            executorService.submit(Objects.requireNonNull(authentication()));
+            executorService.submit(readMessage());
+            executorService.submit(timeOutConnectionIsLogin());
+            executorService.shutdown();
 
         } catch (IOException e) {
             throw new RuntimeException("Problem with ClientHandler");
@@ -56,28 +41,7 @@ public class ClientHandler {
 
     }
 
-    private void closeConnection() {
-        myServer.unsubscribe(this);
-        myServer.broadcastMessage(name + " leave chat");
-        try {
-            dis.close();
-        } catch (IOException ignored) {
-
-        }
-        try {
-            dos.close();
-
-        } catch (IOException ignored) {
-
-        }
-        try {
-            socket.close();
-        } catch (IOException ignored) {
-
-        }
-    }
-
-    public void readMessage() throws IOException {
+    public Runnable readMessage() throws IOException {
         while (true) {
             String messageFromClient = dis.readUTF();
             System.out.println(name + " send message " + messageFromClient);
@@ -88,18 +52,18 @@ public class ClientHandler {
                 }
                 if (messageFromClient.equalsIgnoreCase("/end")) {
                     flag = true;
-                    return;
+                    return null;
                 }
             } else {
 
                 myServer.broadcastMessage(name + ": " + messageFromClient);
             }
             if (messageFromClient.startsWith("/change")) {
-                    String[] messageChangeNick = messageFromClient.split(" ", 3);
-                   BaseAuthService.changeNick(messageChangeNick[1], messageChangeNick[2]);
-                    sendMessage("Ник изменен на "  + messageChangeNick[2]);
-                }
+                String[] messageChangeNick = messageFromClient.split(" ", 3);
+                BaseAuthService.changeNick(messageChangeNick[1], messageChangeNick[2]);
+                sendMessage("Ник изменен на " + messageChangeNick[2]);
             }
+        }
     }
 
     public void sendMessage(String message) {
@@ -110,7 +74,16 @@ public class ClientHandler {
         }
     }
 
-    private void authentication() throws IOException {
+    private Runnable timeOutConnectionIsLogin() throws InterruptedException {
+        Thread.sleep(12000);
+        if (!isLogin) {
+            sendMessage("Time for authorization is over");
+            closeConnection();
+        }
+        return null;
+    }
+
+    private Runnable authentication() throws IOException {
         while (true) {
             String str = dis.readUTF();
             if (str.startsWith("/auth")) {
@@ -125,7 +98,7 @@ public class ClientHandler {
                         myServer.broadcastMessage("Hello " + name);
                         isLogin = true;
                         myServer.subscribe(this);
-                        return;
+                        return null;
                     } else {
                         sendMessage("Nick is busy");
                     }
@@ -133,6 +106,17 @@ public class ClientHandler {
             } else {
                 sendMessage("Wrong login or password");
             }
+        }
+    }
+
+    private void closeConnection() {
+        myServer.unsubscribe(this);
+        myServer.broadcastMessage(name + " leave chat");
+        try {
+            dis.close();
+            dos.close();
+            socket.close();
+        } catch (IOException ignored) {
         }
     }
 

@@ -1,4 +1,4 @@
-package Lesson3.serverSide.service;
+package Lesson4.serverSide.service;
 
 import Lesson3.serverSide.interfaces.AuthService;
 
@@ -36,7 +36,9 @@ public class MyServer {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-       } finally {
+       } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
            if (authService != null) {
             authService.stop();
             }

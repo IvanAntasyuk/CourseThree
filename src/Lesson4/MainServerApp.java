@@ -1,4 +1,4 @@
-package Lesson3;
+package Lesson4;
 
 import Lesson3.serverSide.service.MyServer;
 

@@ -1,4 +1,4 @@
-package Lesson3.clientSide.one;
+package Lesson4.clientSide.two;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,7 +84,7 @@ public class Client extends JFrame {
     private void history() {
         try (PrintWriter out = new PrintWriter(new FileWriter("history.txt", true))) {
             if (!msgInputField.getText().startsWith("/")) {
-                out.append("Message from u1:" + msgInputField.getText() + "\n");
+                out.append("Message from u2:" + msgInputField.getText() + "\n");
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -99,6 +99,7 @@ public class Client extends JFrame {
             int ch;
             while ((ch = reader.read()) != -1) {
                 sb.append((char) ch);
+                sb.append(" ");
             }
 
             dos.writeUTF(String.valueOf(sb));
