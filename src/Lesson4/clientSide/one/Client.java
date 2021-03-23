@@ -121,6 +121,10 @@ public class Client extends JFrame {
         chatArea.setEditable(false);
         chatArea.setLineWrap(true);
         add(new JScrollPane(chatArea), BorderLayout.CENTER);
+        JLabel label = new JLabel();
+        ImageIcon icon = new ImageIcon("Java.png");
+        label.setIcon(icon);
+       // add(label);
 
 
         JPanel bottomPanel = new JPanel(new BorderLayout());
