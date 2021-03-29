@@ -43,7 +43,7 @@ public class BaseAuthService implements AuthService {
     }
    static public void logPrintStart(){
 
-        logger.info("AuthService start log");
+        logger.info("AuthService start ");
     }
 
 
@@ -70,7 +70,7 @@ public class BaseAuthService implements AuthService {
     @Override
     public void stop() {
         if (ClientHandler.flag = true) {
-            logger.fatal("AuthService stop log");
+            logger.info("AuthService stop log");
 
 
             try {

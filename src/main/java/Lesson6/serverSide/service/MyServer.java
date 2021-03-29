@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyServer {
-    private static final Logger logger = LogManager.getLogger(MyServer.class);
+    private static Logger logger = LogManager.getLogger(MyServer.class.getSimpleName());
 
     private final int PORT = 8091;
     private List<ClientHandler> clients;
@@ -28,8 +28,11 @@ public class MyServer {
             authService.start();
             clients = new ArrayList<>();
             while (true) {
-                logger.info("Server wait");
+                System.out.println(" сервер ожидает подключения ");
+                logger.info("Server Wait");
+
                 Socket socket = server.accept();
+                System.out.println("клиент подключился");
                 logger.info("Client connect");
 
 
